@@ -1,0 +1,36 @@
+name: Band Bot 🤖
+
+on:
+  schedule:
+    - cron: '* * * * *'   # 1분마다 (GitHub Actions 최소 단위)
+  workflow_dispatch:        # 수동 실행 (테스트용)
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4      # 다음 실행 전에 반드시 종료
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Python deps
+        run: pip install -r requirements.txt
+
+      - name: Install Playwright browsers
+        run: playwright install chromium --with-deps
+
+      - name: Run bot
+        env:
+          NAVER_ID: ${{ secrets.NAVER_ID }}
+          NAVER_PW: ${{ secrets.NAVER_PW }}
+          BAND_URL: ${{ secrets.BAND_URL }}
+          GIST_ID:  ${{ secrets.GIST_ID }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: python bot.py
