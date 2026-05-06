@@ -2,13 +2,13 @@ name: Band Bot 🤖
 
 on:
   schedule:
-    - cron: '*/5 * * * *'   # 1분마다 (GitHub Actions 최소 단위)
-  workflow_dispatch:        # 수동 실행 (테스트용)
+    - cron: '*/5 * * * *'    # 5분마다 실행 (한도 절약을 위해 수정)
+  workflow_dispatch:         # 수동 실행 버튼 활성화
 
 jobs:
   run-bot:
-    runs-on: ubuntu-latest
-    timeout-minutes: 4      # 다음 실행 전에 반드시 종료
+    runs-on: ubuntu-22.04    # 에러 방지를 위해 22.04 버전으로 고정
+    timeout-minutes: 4       # 4분 후 자동 종료
 
     steps:
       - name: Checkout
@@ -21,10 +21,14 @@ jobs:
           cache: 'pip'
 
       - name: Install Python deps
-        run: pip install -r requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
       - name: Install Playwright browsers
-        run: playwright install chromium --with-deps
+        run: |
+          pip install playwright
+          playwright install chromium
 
       - name: Run bot
         env:
