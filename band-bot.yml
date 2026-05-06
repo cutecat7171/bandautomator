@@ -2,7 +2,7 @@ name: Band Bot 🤖
 
 on:
   schedule:
-    - cron: '* * * * *'   # 1분마다 (GitHub Actions 최소 단위)
+    - cron: '*/5 * * * *'   # 1분마다 (GitHub Actions 최소 단위)
   workflow_dispatch:        # 수동 실행 (테스트용)
 
 jobs:
