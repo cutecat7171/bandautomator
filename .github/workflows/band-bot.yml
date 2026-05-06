@@ -2,12 +2,12 @@ name: Band Bot 🤖
 
 on:
   schedule:
-    - cron: '*/5 * * * *'    # 5분마다 실행
-  workflow_dispatch:         # 수동 실행 버튼
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
 
 jobs:
   run-bot:
-    # 핵심 수정: 최신 버전(latest) 대신 안정적인 22.04 버전을 사용합니다.
+    # 24.04 에러를 피하기 위해 명시적으로 22.04를 사용합니다.
     runs-on: ubuntu-22.04 
     timeout-minutes: 4
 
@@ -25,12 +25,12 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install playwright
 
       - name: Install Playwright browsers
-        # --with-deps를 빼고 직접 필요한 것만 깔끔하게 설치합니다.
-        run: |
-          pip install playwright
-          playwright install chromium
+        # 에러의 원인인 --with-deps를 삭제했습니다.
+        # GitHub Actions 기본 환경에는 필요한 라이브러리가 이미 대부분 갖춰져 있습니다.
+        run: playwright install chromium
 
       - name: Run bot
         env:
