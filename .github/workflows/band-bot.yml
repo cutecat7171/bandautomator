@@ -2,13 +2,14 @@ name: Band Bot 🤖
 
 on:
   schedule:
-    - cron: '*/5 * * * *'    # 5분마다 실행 (한도 절약을 위해 수정)
-  workflow_dispatch:         # 수동 실행 버튼 활성화
+    - cron: '*/5 * * * *'    # 5분마다 실행
+  workflow_dispatch:         # 수동 실행 버튼
 
 jobs:
   run-bot:
-    runs-on: ubuntu-22.04    # 에러 방지를 위해 22.04 버전으로 고정
-    timeout-minutes: 4       # 4분 후 자동 종료
+    # 핵심 수정: 최신 버전(latest) 대신 안정적인 22.04 버전을 사용합니다.
+    runs-on: ubuntu-22.04 
+    timeout-minutes: 4
 
     steps:
       - name: Checkout
@@ -26,6 +27,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Install Playwright browsers
+        # --with-deps를 빼고 직접 필요한 것만 깔끔하게 설치합니다.
         run: |
           pip install playwright
           playwright install chromium
